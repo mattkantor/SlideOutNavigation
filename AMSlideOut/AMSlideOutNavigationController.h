@@ -75,7 +75,7 @@ typedef void (^AMSlideOutCompletionHandler)(void);
 
 /** Sets container view to a view controller without adding it to the menu  **/
 - (void)setContentViewController:(UIViewController *)controller;
-
+- (void)addPersonalizationInfoToTop:(NSString*)name icon:(UIImage*)icon;
 - (void)addViewControllerToLastSection:(UIViewController*)controller tagged:(int)tag withTitle:(NSString*)title andIcon:(id)icon;
 - (void)addViewControllerToLastSection:(UIViewController*)controller tagged:(int)tag withTitle:(NSString*)title andIcon:(id)icon andSelectionIcon:(id)selectionIcon;
 - (void)addViewControllerToLastSection:(UIViewController*)controller tagged:(int)tag withTitle:(NSString*)title andIcon:(id)icon beforeChange:(void(^)())before onCompletition:(void(^)())after;

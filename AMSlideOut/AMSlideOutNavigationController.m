@@ -25,6 +25,9 @@
 @property (strong, nonatomic)	UILabel                 *badge;
 @property (assign, nonatomic)   BOOL                    menuVisible;
 @property (assign, nonatomic)   BOOL                    viewHasBeenShownOnce;
+@property (assign, nonatomic)   NSString                 *displayName;
+@property (assign, nonatomic)   UIImage                 *myImage;
+
 
 @end
 
@@ -82,6 +85,12 @@
 	_startingControllerTag = -1;
 	_navigationControllerClass = [UINavigationController class];
 }
+
+- (void)addPersonalizationInfoToTop:(NSString*)name icon:(UIImage*)icon{
+    self.displayName = name;
+    self.myImage = icon;
+}
+
 
 - (void)setLeftBarButton:(UIBarButtonItem*)barButton
 {
@@ -542,9 +551,26 @@
 
 - (void)loadView
 {
-	UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-	[view setBackgroundColor:self.options[AMOptionsBackground]];
-	
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [view setBackgroundColor:self.options[AMOptionsBackground]];
+    
+    if([self.displayName isEqualToString:@""]){
+        
+    }else{
+        UIView *personalizedHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,80)];
+        
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 10, SCREEN_WIDTH-100, 60)];
+        nameLabel.backgroundColor = [UIColor clearColor];
+        nameLabel.text = self.displayName;
+        nameLabel.textColor = self.options[AMOptionsCellFontColor];
+        nameLabel.highlightedTextColor = self.options[AMOptionsCellSelectionFontColor];
+        nameLabel.shadowOffset = CGSizeMake(0, 1);
+            nameLabel.shadowColor = self.options[AMOptionsCellShadowColor];
+        nameLabel.font = self.options[AMOptionsCellFont];
+        [personalizedHeaderView addSubview:nameLabel];
+        UIImageView *logoView = [[UIImageView alloc]initWithFrame:CGRectMake(10,10, 60,60)];
+        logoView.image = self.myImage;
+    }
 	// Table View setup
 	self.tableView = [[AMTableView alloc] initWithFrame:[self tableRect]];
 	self.tableView.options = self.options;
@@ -686,14 +712,25 @@
 
 - (CGRect)tableRect
 {
-    return (CGRect){
-        (CGPoint){
-            [self.options[AMOptionsTableInsetX] floatValue],
-            [self.options[AMOptionsTableOffsetY] floatValue]
+      if([self.displayName isEqualToString:@""]){
+        return (CGRect){
+            (CGPoint){
+                [self.options[AMOptionsTableInsetX] floatValue] ,[self.options[AMOptionsTableOffsetY] floatValue]
         }, (CGSize) {
             [self.options[AMOptionsSlideValue] floatValue]-[self.options[AMOptionsTableInsetX] floatValue]*2,
             SCREEN_HEIGHT - [self.options[AMOptionsTableOffsetY] floatValue]}
-    };
+        };
+      }else{
+          
+          return (CGRect){
+              (CGPoint){
+                  [self.options[AMOptionsTableInsetX] floatValue] ,[self.options[AMOptionsTableOffsetY] floatValue] + 80.0
+              }, (CGSize) {
+                  [self.options[AMOptionsSlideValue] floatValue]-[self.options[AMOptionsTableInsetX] floatValue]*2,
+                  SCREEN_HEIGHT - [self.options[AMOptionsTableOffsetY] floatValue] + 80.0}
+          };
+          
+      }
 }
 
 - (void)viewDidLayoutSubviews
